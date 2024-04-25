@@ -1,0 +1,38 @@
+<?php
+//connect to the DB
+require_once('DBconnect.php');
+
+//check inputs are not empty
+if(isset($_POST['date']) && isset($_POST['cModel']) && isset($_POST['msg']) && isset($_POST['inq'])){
+
+    // write to check if the queries exist:
+    $d = $_POST['date'];
+    $m = $_POST['cModel'];
+    $t = $_POST['msg'];
+    $i = $_POST['inq'];
+
+    // It's recommended to use prepared statements to prevent SQL injection
+    $sql = "INSERT INTO `inquiry`(`date`, `car_model`, `message`, `any_inquiry`) VALUES (?, ?, ?, ?)";
+    
+    // Create a prepared statement
+    $stmt = mysqli_prepare($conn, $sql);
+    
+    // Bind parameters to the statement
+    mysqli_stmt_bind_param($stmt, "ssss", $d, $m, $t, $i);
+
+    // Execute the statement
+    if(mysqli_stmt_execute($stmt)){
+        echo "Inquiry Successful.";
+    }
+    else{
+        echo "Inquiry Failed.";
+    }
+
+    // Close the statement
+    mysqli_stmt_close($stmt);
+    
+    // Close the connection
+    mysqli_close($conn);
+}
+?>
+
